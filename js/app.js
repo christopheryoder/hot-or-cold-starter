@@ -14,50 +14,80 @@ $(document).ready(function(){
   	/*Declare global variables*/
   	var secretNumber = Math.floor(Math.random()*100);
   	var userGuess;
+  	var guessCount = 0;
 
-  	/*what happens when someone pushes the newGame button?*/
-  	var newGame = function() {
-		setSecretNumber();
-		/*more stuff*/
-  	};
+  	/*Declare global functions*/
 
-  	/*sets secret number to random number between 1 and 100*/
+	var postFeedback = function(message) {
+	$('#feedback').text(message);
+	};
+
   	var setSecretNumber = function() {
   		secretNumber = Math.floor(Math.random()*100);
   	};
 
-  	/*sets user guess variable*/
   	var setUserGuess = function() {
   		userGuess = $("#userGuess").val();
-  		console.log(userGuess);
+  	};
+
+  	var postGuessCount = function() {
+  		$("#count").text(guessCount);
+  	};
+
+  	var newGame = function() {
+		setSecretNumber();
+		postFeedback("Make your Guess!");
+		$("#userGuess").val("");
+		guessCount = 0;
+		postGuessCount();
+		/*more stuff*/
   	};
 
   	/*compares user guess and secret number and posts feedback*/
   	var feedback = function() {
-		setUserGuess();
 		var difference = Math.abs(userGuess-secretNumber);
-		var postFeedback = function(message) {
-			$('#feedback').text(message);
-		};
-		if(difference >= 1 && difference <= 10) {
+		if (userGuess==secretNumber) {
+			postFeedback("You are correct!");
+			/*Give user the option to start a new game*/
+			var okCancel = confirm("You won the game! : )\nWould you like to play again?");
+			if (okCancel == true) {
+				newGame();
+			} 
+			else {
+
+			}
+		}
+		else if(difference >= 1 && difference <= 3) {
+			postFeedback("You are burning up!");
+		}
+		else if(difference >= 4 && difference <= 6) {
 			postFeedback("You are very hot!");
 		}
-		else if(difference >= 11 && difference <= 20) {
+		else if(difference >= 7 && difference <= 13) {
 			postFeedback("You are hot");
 		}
-		else if(difference >= 21 && difference <= 30) {
+		else if(difference >= 14 && difference <= 25) {
 			postFeedback("You are warm");
 		}
-		else if (difference >= 31 && difference <= 50) {
+		else if (difference >= 26 && difference <= 50) {
 			postFeedback("You are cold");
 		}
 		else {
 			postFeedback("You are ice cold!");
 		}
+		guessCount++;
+		postGuessCount();
 	};
 
-	/*runs feedback function when the user clicks the button*/
-	$('#guessButton').click(alert('2:06pm'));
+	/*What happens when the user clicks the guess button*/
+	$('#guessButton').click(function(event) {
+		event.preventDefault();
+		setUserGuess();
+		feedback();
+	});
+
+	/*What happens when the user clicks on the New Game button*/
+	$('.new').click(function() {
+		newGame();
+	});
 });
-
-

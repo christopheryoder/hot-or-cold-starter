@@ -34,17 +34,21 @@ $(document).ready(function(){
   		$("#count").text(guessCount);
   	};
 
+  	var clearGuessBox = function() {
+  		$("#userGuess").val("");
+  	};
+
   	var newGame = function() {
 		setSecretNumber();
 		postFeedback("Make your Guess!");
-		$("#userGuess").val("");
+		clearGuessBox();
 		guessCount = 0;
 		postGuessCount();
 		/*more stuff*/
   	};
 
   	/*compares user guess and secret number and posts feedback*/
-  	var feedback = function() {
+  	var compare = function() {
 		var difference = Math.abs(userGuess-secretNumber);
 		if (userGuess==secretNumber) {
 			postFeedback("You are correct!");
@@ -52,6 +56,7 @@ $(document).ready(function(){
 			var okCancel = confirm("You won the game! : )\nWould you like to play again?");
 			if (okCancel == true) {
 				newGame();
+				return;
 			} 
 			else {
 
@@ -83,7 +88,9 @@ $(document).ready(function(){
 	$('#guessButton').click(function(event) {
 		event.preventDefault();
 		setUserGuess();
-		feedback();
+		clearGuessBox();
+		compare();
+		$("#guessList").append("<li>"+userGuess+"</li>");
 	});
 
 	/*What happens when the user clicks on the New Game button*/
